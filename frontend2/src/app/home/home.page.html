@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar text-center>
+    <ion-title>
+      SUPERGEEKS
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid fixed>
+    <div class="ion-padding auto-scroll">
+      <ion-button (click)="getNotes()" color="tertiary">Atualizar</ion-button>
+      <ion-button (click)="addModal()" fill="clear">
+        <ion-icon name="add-circle-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button routerLink="/about" color="success">Sobre</ion-button>
+      
+      <ion-list lines="none">
+        <ion-list-header>
+          <ion-label>
+            <ion-text>
+              <h1 text-left>Projetos</h1>
+            </ion-text>
+          </ion-label>
+    	  </ion-list-header>
+    	  <ion-item *ngFor="let note of notes">
+          <ion-label text-wrap>
+            <ion-text color="primary"><h2>{{ note.title }}</h2></ion-text>
+            <ion-text color="secondary">{{ note.content }}</ion-text>
+          </ion-label>
+          <ion-button slot="end" fill="clear" color="dark" (click)="deleteAlert(note)">
+            <ion-icon name="trash" slot="icon-only" color="danger"></ion-icon>
+          </ion-button>
+          <ion-button slot="end" fill="clear" color="dark" (click)="editModal(note)">
+            <ion-icon name="brush" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-list>
+    </div>
+  </ion-grid>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar text-center>
+    <ion-text>
+      <small>RODAPÉ</small>
+    </ion-text>
+  </ion-toolbar>
+</ion-footer>
