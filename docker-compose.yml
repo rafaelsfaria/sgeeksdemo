@@ -1,0 +1,36 @@
+version: "3.7"
+
+services:
+
+  mongodb:
+    container_name: mongodb-container
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - ./backend/db/data:/data/db
+    ports:
+      - "27017:27017"
+  api:
+    build: "./backend"
+    container_name: api-container
+    restart: always
+    volumes:
+      - ./backend:/usr/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+  ionic:
+    build: "./frontend"
+    container_name: ionic-container
+    restart: always
+    volumes:
+      - ./frontend:/usr/app
+    ports:
+      - "4200:4200"
+    depends_on:
+      - mongodb
+      - api
