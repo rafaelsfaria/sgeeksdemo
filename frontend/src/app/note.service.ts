@@ -18,10 +18,10 @@ export class NoteService {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
 
-  addHero (hero: Note): Observable<Note> {
-    return this.http.post<Note>(this.url, hero, this.httpOptions).pipe(
-      tap((newNote: Note) => console.log(`added hero w/ id=${newNote.__id}`)),
-      catchError(this.handleError<Note>('addHero'))
+  addNote (note: Note): Observable<Note> {
+    return this.http.post<Note>(`${this.url}/notes`, note, this.httpOptions).pipe(
+      tap((newNote: Note) => console.log(`added note w/ id=${newNote._id}`)),
+      catchError(this.handleError<Note>('addNote'))
     );
   }
 
@@ -34,19 +34,16 @@ export class NoteService {
   }
 
   updateNote (note: Note): Observable<any> {
-    return this.http.put(this.url, Note, this.httpOptions).pipe(
-      tap(_ => console.log(`updated Note id=${note.__id}`)),
+    return this.http.put(`${this.url}/notes/${note._id}`, note, this.httpOptions).pipe(
+      tap(_ => console.log(`updated Note id=${note._id}`)),
       catchError(this.handleError<any>('updateNote'))
     );
   }
 
-  deleteHero (note: Note | number): Observable<Note> {
-    const id = typeof note === 'number' ? note : note.__id;
-    const url = `${this.url}/${id}`;
-
-    return this.http.delete<Note>(url, this.httpOptions).pipe(
-      tap(_ => console.log(`deleted Note id=${id}`)),
-      catchError(this.handleError<Note>('deleteHero'))
+  deleteNote (_id: string): Observable<Note> {
+    return this.http.delete<Note>(`${this.url}/notes/${_id}`, this.httpOptions).pipe(
+      tap(_ => console.log(`deleted Note id=${_id}`)),
+      catchError(this.handleError<Note>('deleteNote'))
     );
   }
 

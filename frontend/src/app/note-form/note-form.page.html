@@ -1,6 +1,6 @@
 <ion-content class="autoscroll">
 	<ion-fab vertical="top" horizontal="end" slot="fixed">
-		<ion-fab-button size="small" (click)="close(false)">
+		<ion-fab-button size="small" (click)="cancel()">
 			<ion-icon name="close-circle"></ion-icon>
 		</ion-fab-button>
 	</ion-fab>
@@ -8,19 +8,23 @@
 		<ion-row align-items-center justify-content-center>
 			<ion-col size-md="4">
 				<ion-text>
-					<h1 text-center>{{task}}</h1>
+					<h1 text-center>{{task}} Note</h1>
 				</ion-text>
 				<form [formGroup]="noteForm">
 					<ion-list lines="none">
 						<ion-item>
-							<ion-input formControlName="title" type="text" placeholder=Título maxlength = "100"></ion-input>
+              <ion-input *ngIf = "task === 'Edit'" formControlName="title" type="text" 
+              placeholder="{{placeholder.title}}" value="{{placeholder.title}}" maxlength = "100"></ion-input>
+              <ion-input *ngIf = "task === 'Create'" formControlName="title" type="text" 
+              placeholder="{{placeholder.title}}" maxlength = "100"></ion-input>
 						</ion-item>
 						<ion-item>
-							<ion-input formControlName="content" type="text" placeholder=Conteúdo maxlength="100"></ion-input>
+              <ion-input formControlName="content" type="text" 
+              placeholder="{{placeholder.content}}" maxlength="100"></ion-input>
 						</ion-item>
-					</ion-list>
-					<ion-button *ngIf = "note.title ===''" expand="block" size="large" fill="outline" (click)="close(true)" [disabled]="!noteForm.valid">Adicionar</ion-button>
-					<ion-button *ngIf = "note.title !==''" expand="block" size="large" fill="outline" (click)="close(true)" [disabled]="!noteForm.valid">Editar</ion-button>
+          </ion-list>
+          <ion-button expand="block" size="large" fill="outline" (click)="close()" 
+          [disabled]="!noteForm.valid">{{task}}</ion-button>
 				</form>
 			</ion-col>
 		</ion-row>

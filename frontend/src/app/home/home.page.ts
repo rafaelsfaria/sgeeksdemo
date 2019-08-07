@@ -13,9 +13,9 @@ export class HomePage {
 
   notes: Note[] = [];
   emptyNote: Note = {
-    __id: '',
+    _id: '',
     title: '',
-    content: ''
+    content: '',
   }
 
   constructor(
@@ -37,23 +37,23 @@ export class HomePage {
       subHeader: note.title,
       message: note.content,
       buttons: [
-      {
-        text: 'Deletar',
-        handler: () => {
-          this.deleteNote(note);
+        {
+          text: 'Deletar',
+          handler: () => {
+            this.deleteNote(note._id);
+          }
+        },
+        {
+          text: 'Cancelar',
+          role: 'cancel'
         }
-      },
-      {
-        text: 'Cancelar',
-        role: 'cancel'
-      }
       ]
     });
 
     await alert.present();
   }
 
-  async editModal(note) {
+  async editModal(note: Note) {
     const modal = await this.modalController.create({
       component: NoteFormPage,
       componentProps: {
@@ -62,10 +62,15 @@ export class HomePage {
       }
     });
     await modal.present();
-    const { data } = await modal.onDidDismiss(); 
-    console.log(data);
-    if (data.task == 'Edit') {
-      
+    const { data } = await modal.onDidDismiss();
+    if (typeof data !== 'undefined') {
+      note.title = data.note.title;
+      note.content = data.note.content;
+      this.noteService.updateNote(note)
+        .subscribe(updatedNote => {
+          const index = this.notes.findIndex(x => x._id === updatedNote._id);
+          this.notes.splice(index, 1, updatedNote);
+        });
     }
   }
 
@@ -80,14 +85,17 @@ export class HomePage {
     
     await modal.present();
     const { data } = await modal.onDidDismiss(); 
-    console.log(data);
-    if (data.task == 'Create') {
-      this.notes.push(data.note);
+    if (typeof data !== 'undefined') {
+      this.noteService.addNote(data.note)
+      .subscribe(addedNote => this.notes.push(addedNote));
     }
   }
 
-  deleteNote(note) {
-    const index = this.notes.indexOf(note);
-    this.notes.splice(index, 1);
+  deleteNote(id: string) {
+    this.noteService.deleteNote(id)
+      .subscribe( _ => {
+        const index = this.notes.findIndex(x => x._id === id);
+        this.notes.splice(index, 1);
+      })
   }
 }
